@@ -11,7 +11,11 @@
 6a. Supporting English Learners
 
 ## Why it matters
-These are the checkboxes (1–6a) on the official Weekly Team Leader Work Plan form; any AI-drafted plan must state which standards each day hits.
+These are the checkboxes (1–6a) on the official Weekly Team Leader Work Plan form; any AI-drafted plan must state which standards each day hits. They derive from the **Quality Standards for Expanded Learning of California**.
+
+## Agency alignment details (added 2026-07-08 from Fall Launch deck)
+- **August–November agency focus: Standards 1 and 2** — Safe & Supportive Environment ("supports the developmental, social-emotional, and physical needs of all students") and Active & Engaged Learning ("active, meaningful, and engaging learning methods that promote collaboration and expand student horizons")
+- The **Program Initiative Plan** is built on Standards 1, 2, and 4 (Safe & Supportive, Active & Engaged, Youth Voice & Leadership)
 
 ## Related
 - [[2026-07-08_work-plan-format]] — the form they appear on

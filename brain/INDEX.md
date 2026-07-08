@@ -21,6 +21,14 @@ Format: `- [[filename]] — one-line summary`
 - [[2026-07-08_six-quality-standards]] — The 6 (+6a) Quality Standards every work-plan day is marked against
 - [[2026-07-08_work-plan-format]] — Exact structure of the weekly Team Leader work plan, from Oliver's filled example
 - [[2026-07-08_the-center-program-facts]] — Durable org facts: mission, values, hours, sites, 25–26 theme and goals
+- [[2026-07-08_timesheet-payroll-rules]] — Paychex procedures, break law compliance (30-min lunch, 10-min rest), premiums, correction protocol
+- [[2026-07-08_attendance-absence-policies]] — Absence/tardiness notification rules, sick leave accrual, time-off requests, no-call-no-show
+- [[2026-07-08_employment-status-policies]] — PT casual status, academic-year terms, Intent to Return, 90-day probation, leaves of absence
+- [[2026-07-08_safety-supervision-boundaries]] — Drills, visitor protocol, authorized pickup, line-of-sight supervision, student boundary rules
+- [[2026-07-08_mandated-reporter-protocol]] — Who reports, when, and the exact 2-step filing process with phone number and form
+- [[2026-07-08_daily-program-operations]] — The TL day: check-in, prep, carts, dress code, work-plan logistics, program-end rules
+- [[2026-07-08_behavior-classroom-agreements]] — Same House Same Rule, classroom agreements format, PBIS/CHAMPS alignment
+- [[2026-07-08_performance-assessment]] — Informal/formal observations, assessment documentation, corrective action plan
 
 ## metrics/
 (Dated snapshots of the numbers.)

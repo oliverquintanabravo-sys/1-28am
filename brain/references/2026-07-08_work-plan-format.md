@@ -11,9 +11,28 @@ Official form: "Weekly Team Leader Work Plans" (theCenter). Header: School Site 
 
 Ongoing-program example: the Career Exploration Program — each student writes their dream career on a card; one card drawn per week becomes the enrichment theme until every name is called. "Every student gets their moment."
 
+## Official blank template fields (added 2026-07-08 from Edited Work Template Doc)
+Header: `School Site:` / `Team Leader:` / `Dates:`. Then per day (Mon–Fri), exactly:
+```
+{Day} Initiative:
+*Quality Standards:   ☐1   ☐2   ☐3   ☐4   ☐5   ☐6   ☐6a
+Materials:
+Academic Support & Literacy:
+Structured Physical Activity:
+Enrichment:
+Objective/Description:
+```
+
+## Work-plan policy (added 2026-07-08 from Fall Launch deck, slides 40–41)
+- **Why they exist:** planning the day/week/month/year; required for **grants** and the **district**; used by substitutes **when you are absent**
+- **Logistics:** work time is provided daily/weekly/monthly; typed or handwritten; there is a **DUE DATE** — upload to the drive or email the Program Manager; **every day must be completed**
+- **Implementation standards:** the template is a guide/base — authentic facilitation over script-reading; build in **inclusivity and Plan B's**
+- **Reflection** is a required habit: it drives student-interest enrichment and student buy-in
+
 ## Related
 - [[2026-07-08_weekly-framework]]
 - [[2026-07-08_six-quality-standards]]
+- [[2026-07-08_performance-assessment]] — plans feed evaluation evidence
 
 ---
-**Source:** WorkPlan_MrOliver_FILLED.pdf (sources/ zip) · **Captured:** 2026-07-08
+**Source:** WorkPlan_MrOliver_FILLED.pdf; Edited Work Template Doc .docx; Fall Launch Presentation '25 slides 40–41 (sources/ zip) · **Captured:** 2026-07-08
