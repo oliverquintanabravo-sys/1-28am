@@ -1,0 +1,9 @@
+# Secrets — API keys live in .env, never in git
+.env
+.env.*
+
+# Scratch space for drafts — never committed
+.tmp/
+
+# Obsidian UI state — not business memory
+.obsidian/
