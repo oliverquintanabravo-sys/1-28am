@@ -101,7 +101,7 @@ Nothing breaks the same way twice, because every failure becomes an edit to the 
 
 - Context files are populated with **[verified]** facts from Oliver's documents; `[BRACKETED CAPS]` placeholders await Oliver's strategic input (goals, vision, preferences).
 - `sources/intern-to-team-lead-toolkit.zip` is fully mined for text (see the ledger in `sources/README.md`); the brain holds the complete policy layer from Fall Launch '25.
-- Flagship SOP: `directives/weekly_work_plan.md` (v2) — needs one live run with Oliver before `execution/render_work_plan.py` gets built (blueprint at `execution/designs/render_work_plan.md`).
+- Flagship SOP: `directives/weekly_work_plan.md` (v2) — needs one live run with Oliver. Its renderer is built: `execution/render_work_plan.html`, a single-file, offline, model-independent browser tool (parse → validate → render → download/print/share). The Python variant is superseded (see `execution/designs/render_work_plan.md`).
 - Known contradiction awaiting Oliver's ruling: resignation email channel (careers@ vs district admin) — flagged in [[2026-07-08_attendance-absence-policies]].
 - Active project: `projects/team_lead_toolkit/`.
 - `clients/` is empty by design — Oliver's current work is project-shaped, not client-shaped. The layer exists for when that changes.

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Plan Builder — Weekly Team Leader Work Plans</title>
+<style>
+  :root{
+    --ink:#1a2332; --muted:#5b6b82; --line:#dbe2ec; --bg:#f2f5f9; --card:#ffffff;
+    --accent:#e8641b; --accent-dark:#c94f0e; --accent-soft:#fdf0e7;
+    --blue:#1d4ed8; --blue-soft:#e8eefc; --good:#15803d; --warn:#b45309; --warn-soft:#fef3e2;
+    --radius:14px; --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px -12px rgba(16,24,40,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  /* ---------- header ---------- */
+  header{background:linear-gradient(135deg,#16233b 0%,#1f3355 60%,#274068 100%);color:#fff;
+    padding:20px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  header .logo{width:46px;height:46px;flex:none;background:var(--accent);border-radius:12px;
+    display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  header h1{font-size:1.15rem;font-weight:800;letter-spacing:.01em}
+  header p{font-size:.8rem;color:#b8c6dd}
+  header .spacer{flex:1}
+  .badge{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#dbe6f5;
+    padding:4px 10px;border-radius:999px}
+  /* ---------- toolbar ---------- */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 28px;background:var(--card);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  button{font:inherit;font-size:.85rem;font-weight:600;border:1px solid var(--line);cursor:pointer;
+    background:#fff;color:var(--ink);padding:9px 14px;border-radius:10px;display:inline-flex;
+    align-items:center;gap:8px;transition:all .15s ease}
+  button:hover{border-color:#b9c5d6;transform:translateY(-1px);box-shadow:var(--shadow)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.primary:hover{background:var(--accent-dark)}
+  button.blue{background:var(--blue);border-color:var(--blue);color:#fff}
+  button svg{width:15px;height:15px;flex:none}
+  /* ---------- layout ---------- */
+  .wrap{display:grid;grid-template-columns:minmax(340px,44fr) minmax(380px,56fr);gap:22px;
+    padding:22px 28px;max-width:1500px;margin:0 auto}
+  @media (max-width:980px){.wrap{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden}
+  .panel-head{padding:13px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+    gap:10px;background:#fafbfd}
+  .panel-head h2{font-size:.82rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .panel-head svg{width:16px;height:16px;color:var(--accent)}
+  textarea{width:100%;min-height:560px;border:0;outline:none;resize:vertical;padding:18px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.6;
+    color:#22304a;background:#fbfcfe;display:block}
+  .hint{padding:12px 18px;border-top:1px dashed var(--line);font-size:.76rem;color:var(--muted)}
+  details.help{margin:0 18px 14px}
+  details.help summary{cursor:pointer;font-size:.8rem;font-weight:700;color:var(--blue);padding:6px 0}
+  details.help pre{background:#0f1a2c;color:#cfe0f5;font-size:.72rem;padding:14px;border-radius:10px;
+    overflow-x:auto;white-space:pre-wrap;line-height:1.55}
+  /* ---------- rendered plan ---------- */
+  #output{padding:20px}
+  .plan-header{border:2px solid var(--ink);border-radius:12px;padding:16px 18px;margin-bottom:16px;
+    display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:#fff}
+  .plan-header .org{font-weight:800;font-size:.95rem;line-height:1.25}
+  .plan-header .org small{display:block;font-weight:600;color:var(--muted);font-size:.7rem;
+    text-transform:uppercase;letter-spacing:.05em}
+  .plan-header .meta{margin-left:auto;font-size:.8rem;display:grid;gap:2px}
+  .plan-header .meta b{color:var(--ink)}
+  .day{border:1.5px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden;background:#fff}
+  .day-head{display:flex;align-items:center;gap:12px;padding:11px 16px;color:#fff;flex-wrap:wrap}
+  .day-head h3{font-size:.95rem;font-weight:800}
+  .day-head .init{font-size:.8rem;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-weight:600}
+  .d-mon .day-head{background:#1d4ed8}.d-tue .day-head{background:#7c3aed}
+  .d-wed .day-head{background:#0f766e}.d-thu .day-head{background:var(--accent-dark)}
+  .d-fri .day-head{background:#be185d}
+  .standards{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px dashed var(--line);
+    align-items:center;background:#fafbfd}
+  .standards .lbl{font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+  .qs{font-size:.72rem;font-weight:700;border:1.5px solid var(--line);border-radius:8px;padding:3px 8px;
+    color:#8896ab;display:inline-flex;gap:5px;align-items:center;background:#fff}
+  .qs.on{border-color:var(--good);color:var(--good);background:#f0faf3}
+  .sections{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media (max-width:700px){.sections{grid-template-columns:1fr}}
+  .sec{padding:12px 16px;border-top:1px solid var(--line)}
+  .sec:nth-child(odd){border-right:1px solid var(--line)}
+  @media (max-width:700px){.sec:nth-child(odd){border-right:0}}
+  .sec.full{grid-column:1/-1;border-right:0}
+  .sec h4{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    display:flex;gap:7px;align-items:center;margin-bottom:6px}
+  .sec h4 svg{width:13px;height:13px;color:var(--accent)}
+  .sec ul{padding-left:18px;font-size:.83rem}
+  .sec p{font-size:.83rem}
+  .sec .empty{color:#c05621;font-size:.78rem;font-style:italic}
+  .planb{background:var(--accent-soft)}
+  .warnings{border:1.5px solid #f3d9ae;background:var(--warn-soft);border-radius:12px;padding:12px 16px;
+    margin-bottom:16px;font-size:.8rem;color:var(--warn)}
+  .warnings b{display:block;margin-bottom:4px}
+  .placeholder-view{text-align:center;padding:60px 20px;color:var(--muted)}
+  .placeholder-view svg{width:120px;height:120px;margin-bottom:14px;color:#c4cfdd}
+  .placeholder-view p{font-size:.9rem;max-width:420px;margin:0 auto}
+  footer{text-align:center;font-size:.72rem;color:var(--muted);padding:18px;line-height:1.7}
+  /* ---------- print: only the plan ---------- */
+  @media print{
+    header,.toolbar,.left-col,.hint,footer,.warnings{display:none!important}
+    body{background:#fff}
+    .wrap{display:block;padding:0;max-width:none}
+    .panel{border:0;box-shadow:none}
+    #output{padding:0}
+    .day{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <!-- hammer icon -->
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/>
+      <path d="M17.64 15L22 10.64"/>
+      <path d="M20.91 11.7l-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/>
+    </svg>
+  </div>
+  <div>
+    <h1>Work Plan Builder</h1>
+    <p>Weekly Team Leader Work Plans · works offline · works with any AI model</p>
+  </div>
+  <div class="spacer"></div>
+  <span class="badge">Model-independent tool</span>
+</header>
+
+<div class="toolbar">
+  <button class="primary" onclick="renderPlan()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Render plan
+  </button>
+  <button onclick="loadSample()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Load sample week
+  </button>
+  <button onclick="downloadRendered()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download rendered plan
+  </button>
+  <button onclick="window.print()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / save PDF
+  </button>
+  <button class="blue" onclick="downloadTool()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="8 8 12 4 16 8"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
+    Share this tool (download a copy)
+  </button>
+</div>
+
+<div class="wrap">
+  <!-- ================= LEFT: INPUT ================= -->
+  <div class="left-col">
+    <div class="panel">
+      <div class="panel-head">
+        <!-- wrench icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <h2>Plan input (Markdown)</h2>
+      </div>
+      <textarea id="input" spellcheck="false" placeholder="Paste your weekly plan here, or click 'Load sample week'…"></textarea>
+      <div class="hint">
+        Format: front matter between <code>---</code> lines, then one <code>## Day — Initiative</code>
+        block per day with <code>standards:</code> and <code>###</code> sections. Click
+        <b>Load sample week</b> to see it. Missing pieces are flagged, never invented.
+      </div>
+      <details class="help">
+        <summary>▸ Prompt to give ANY AI model (copy-paste this)</summary>
+        <pre id="ai-prompt">You are helping a Team Leader in an after-school Expanded Learning program write their Weekly Team Leader Work Plan. Output ONLY a markdown document in exactly this format — nothing else:
+
+---
+site: [SCHOOL SITE]
+team_leader: [NAME]
+week_of: [YYYY-MM-DD]
+---
+
+## Monday — STEM
+standards: 1, 2, 3
+### Academic Support & Literacy
+- ...
+### Structured Physical Activity
+- ...
+### Enrichment
+Objective/Description: ...
+### Plan B
+- ...
+### Materials
+- ...
+
+(Repeat the ## block for Tuesday — Arts &amp; Creativity, Wednesday — Physical Activity, Thursday — Career Exploration, Friday — Community &amp; Reflection.)
+
+Rules: every day needs all five ### sections. Each Enrichment needs an objective AND a key teaching moment. standards: lists which Quality Standards the day genuinely hits (1 Safe &amp; Supportive Environment, 2 Active &amp; Engaged Learning, 3 Skill Building, 4 Youth Voice &amp; Leadership, 5 Healthy Choices &amp; Behaviors, 6 Diversity Access &amp; Equity, 6a Supporting English Learners). Never check a standard the activity doesn't address. Write each day so a substitute could run it from the page alone. Never invent school events or student facts — use [PLACEHOLDERS] and ask.</pre>
+      </details>
+    </div>
+  </div>
+
+  <!-- ================= RIGHT: RENDERED ================= -->
+  <div class="panel">
+    <div class="panel-head">
+      <!-- clipboard icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+      <h2>Rendered weekly plan</h2>
+    </div>
+    <div id="output">
+      <div class="placeholder-view">
+        <!-- hard hat placeholder icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/>
+          <path d="M10 10V5a2 2 0 0 1 4 0v5"/>
+          <path d="M4 15v-3a8 8 0 0 1 16 0v3"/>
+        </svg>
+        <p><b>Under construction — waiting for your plan.</b><br>
+        Click <b>Load sample week</b> on the left, or paste a plan and hit <b>Render plan</b>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Built for the Center's Expanded Learning Team Leads · plain HTML, zero dependencies, works offline forever.<br>
+  To share: click <b>Share this tool</b>, send the file. To keep after any AI model is gone: this file IS the tool.
+</footer>
+
+<script>
+"use strict";
+/* ============================================================
+   Work Plan Builder — single-file, client-side, no dependencies.
+   Parse a simple markdown work plan -> render the official
+   5-day Weekly Team Leader Work Plan layout.
+   ============================================================ */
+
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+const DAY_CLASS = {Monday:"d-mon",Tuesday:"d-tue",Wednesday:"d-wed",Thursday:"d-thu",Friday:"d-fri"};
+const STANDARDS = ["1","2","3","4","5","6","6a"];
+const STANDARD_NAMES = {
+  "1":"Safe & Supportive Environment","2":"Active & Engaged Learning","3":"Skill Building",
+  "4":"Youth Voice & Leadership","5":"Healthy Choices & Behaviors","6":"Diversity, Access & Equity",
+  "6a":"Supporting English Learners"
+};
+// Section keys: tolerant matching on the first word(s).
+const SECTIONS = [
+  {key:"academic",  label:"Academic Support & Literacy",  match:/^academic/i, icon:"book"},
+  {key:"physical",  label:"Structured Physical Activity", match:/^(structured\s*)?physical/i, icon:"activity"},
+  {key:"enrichment",label:"Enrichment — Objective/Description", match:/^enrichment/i, icon:"bulb", full:true},
+  {key:"planb",     label:"Plan B",                       match:/^plan\s*b/i, icon:"shield", planb:true},
+  {key:"materials", label:"Materials",                    match:/^materials/i, icon:"box"}
+];
+const ICONS = {
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  activity:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>'
+};
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+/* ---------- parser: line-based, order-tolerant, never throws ---------- */
+function parsePlan(text){
+  const plan = {meta:{site:"",team_leader:"",week_of:""}, days:{}, warnings:[]};
+  const lines = text.replace(/\r\n?/g,"\n").split("\n");
+  let i = 0;
+
+  // Front matter (optional): --- key: value ... ---
+  if (lines[0] && lines[0].trim() === "---"){
+    i = 1;
+    while (i < lines.length && lines[i].trim() !== "---"){
+      const m = lines[i].match(/^\s*([A-Za-z_ ]+)\s*:\s*(.*)$/);
+      if (m){
+        const key = m[1].trim().toLowerCase().replace(/\s+/g,"_");
+        if (key in plan.meta) plan.meta[key] = m[2].trim();
+      }
+      i++;
+    }
+    i++; // skip closing ---
+  }
+
+  let curDay = null, curSec = null;
+  for (; i < lines.length; i++){
+    const line = lines[i];
+    // Day heading: "## Monday — STEM" (any dash type, case-insensitive)
+    const dm = line.match(/^##\s+(\w+)\s*(?:[—–-]+\s*(.*))?$/);
+    if (dm && !line.startsWith("###")){
+      const dayName = DAYS.find(d => d.toLowerCase() === dm[1].toLowerCase());
+      if (dayName){
+        curDay = {initiative:(dm[2]||"").trim(), standards:[], sections:{}};
+        plan.days[dayName] = curDay;
+        curSec = null;
+        continue;
+      }
+    }
+    if (!curDay) continue;
+    // standards: 1, 2, 6a
+    const sm = line.match(/^\s*\**standards\**\s*:\s*(.*)$/i);
+    if (sm){
+      curDay.standards = sm[1].split(/[,\s]+/).map(t=>t.trim().toLowerCase()).filter(t=>STANDARDS.includes(t));
+      continue;
+    }
+    // Section heading: "### Academic Support & Literacy"
+    const secm = line.match(/^###\s+(.*)$/);
+    if (secm){
+      const def = SECTIONS.find(s => s.match.test(secm[1].trim()));
+      curSec = def ? def.key : null;
+      if (def && !curDay.sections[def.key]) curDay.sections[def.key] = [];
+      continue;
+    }
+    if (curSec && line.trim()) curDay.sections[curSec].push(line.trim());
+  }
+
+  // Validation — flag, never invent.
+  for (const d of DAYS){
+    if (!plan.days[d]) { plan.warnings.push(`${d} is missing entirely.`); continue; }
+    const day = plan.days[d];
+    if (!day.initiative) plan.warnings.push(`${d}: no Initiative on the heading (## ${d} — Initiative).`);
+    if (day.standards.length === 0) plan.warnings.push(`${d}: no Quality Standards checked.`);
+    else if (day.standards.length < 2) plan.warnings.push(`${d}: only ${day.standards.length} Quality Standard checked — is that honest coverage?`);
+    for (const s of SECTIONS){
+      if (s.key === "planb"){
+        if (!day.sections.planb || !day.sections.planb.length) plan.warnings.push(`${d}: no Plan B (policy requires one).`);
+      } else if (!day.sections[s.key] || !day.sections[s.key].length){
+        plan.warnings.push(`${d}: "${s.label}" is empty.`);
+      }
+    }
+  }
+  if (!plan.meta.site) plan.warnings.push("Front matter: 'site' missing.");
+  if (!plan.meta.team_leader) plan.warnings.push("Front matter: 'team_leader' missing.");
+  if (!plan.meta.week_of) plan.warnings.push("Front matter: 'week_of' missing.");
+  return plan;
+}
+
+/* ---------- renderer ---------- */
+function contentHTML(items){
+  if (!items || !items.length) return '<p class="empty">— left blank on purpose: fill in, don\'t invent —</p>';
+  const bullets = items.filter(l=>/^[-*•]\s+/.test(l));
+  if (bullets.length === items.length){
+    return "<ul>"+items.map(l=>"<li>"+esc(l.replace(/^[-*•]\s+/,""))+"</li>").join("")+"</ul>";
+  }
+  return items.map(l=>"<p>"+esc(l)+"</p>").join("");
+}
+
+function renderPlan(){
+  const text = document.getElementById("input").value;
+  const out = document.getElementById("output");
+  if (!text.trim()){ out.innerHTML = placeholderView(); return null; }
+  const plan = parsePlan(text);
+  let html = "";
+
+  html += `<div class="plan-header">
+    <div class="org">Weekly Team Leader Work Plans<small>Expanded Learning Program</small></div>
+    <div class="meta">
+      <span>School Site: <b>${esc(plan.meta.site||"[SITE]")}</b></span>
+      <span>Team Leader: <b>${esc(plan.meta.team_leader||"[TEAM LEADER]")}</b></span>
+      <span>Week of: <b>${esc(plan.meta.week_of||"[DATE]")}</b></span>
+    </div></div>`;
+
+  if (plan.warnings.length){
+    html += `<div class="warnings"><b>⚠ ${plan.warnings.length} thing(s) to fix before submitting:</b>`+
+      plan.warnings.map(w=>"• "+esc(w)).join("<br>")+"</div>";
+  }
+
+  for (const d of DAYS){
+    const day = plan.days[d];
+    if (!day) continue;
+    html += `<div class="day ${DAY_CLASS[d]}">
+      <div class="day-head"><h3>${d}</h3><span class="init">Initiative: ${esc(day.initiative||"[?]")}</span></div>
+      <div class="standards"><span class="lbl">Quality Standards</span>`+
+      STANDARDS.map(s=>{
+        const on = day.standards.includes(s);
+        return `<span class="qs${on?" on":""}" title="${esc(STANDARD_NAMES[s])}">${on?"☑":"☐"} ${s}</span>`;
+      }).join("")+`</div><div class="sections">`;
+    for (const s of SECTIONS){
+      html += `<div class="sec${s.full?" full":""}${s.planb?" planb":""}">
+        <h4>${ICONS[s.icon]} ${esc(s.label)}</h4>${contentHTML(day.sections[s.key])}</div>`;
+    }
+    html += `</div></div>`;
+  }
+  out.innerHTML = html || placeholderView();
+  return plan;
+}
+
+function placeholderView(){
+  return document.querySelector(".placeholder-view")
+    ? document.getElementById("output").innerHTML
+    : "";
+}
+
+/* ---------- sample week: placeholders, never fake facts ---------- */
+const SAMPLE = `---
+site: [YOUR SCHOOL SITE]
+team_leader: [YOUR NAME]
+week_of: [YYYY-MM-DD]
+---
+
+## Monday — STEM
+standards: 1, 2, 3
+### Academic Support & Literacy
+- Whole-group homework review at the board
+- 1-on-1 help for students who need extra support
+- Early finishers: [i-Ready / Reflex Math on Chromebooks]
+### Structured Physical Activity
+- Structured game: [GAME NAME]
+- Cool-down: 5-minute stretching circle
+### Enrichment
+Objective/Description: [ACTIVITY NAME] — [what students do]. Key teaching moment: [the question or observation that makes it stick].
+### Plan B
+- [Indoor / low-materials fallback]
+### Materials
+- [Item — quantity, e.g. paper cups (1 per student)]
+
+## Tuesday — Arts & Creativity
+standards: 1, 2, 4
+### Academic Support & Literacy
+- Whole-group homework review, then 1-on-1 support
+- Early finishers: [independent reading]
+### Structured Physical Activity
+- Structured game: [GAME NAME]
+- Cool-down: [stretch / breathing]
+### Enrichment
+Objective/Description: [ART PROJECT] — [medium + theme]. Key teaching moment: [what choice students get to make].
+### Plan B
+- [Fallback]
+### Materials
+- [Construction paper, glue, coloring utensils…]
+
+## Wednesday — Physical Activity
+standards: 1, 2, 5
+### Academic Support & Literacy
+- [Minimum day — extra academic block: worksheets / approved websites]
+### Structured Physical Activity
+- Main event: [RELAY / STATIONS / TEAM GAME]
+- Cool-down: [walk + water]
+### Enrichment
+Objective/Description: [MOVEMENT-BASED ACTIVITY]. Key teaching moment: [healthy-choices connection].
+### Plan B
+- [Indoor circuit if weather/space fails]
+### Materials
+- [Cones, jump ropes, hula hoops…]
+
+## Thursday — Career Exploration
+standards: 1, 2, 4
+### Academic Support & Literacy
+- Whole-group review, 1-on-1 help, early finishers: [option]
+### Structured Physical Activity
+- Structured game: [GAME NAME]
+- Cool-down: [routine]
+### Enrichment
+Objective/Description: Career program — this week's career: [DRAWN FROM CARD]. Activity: [tie-in across writing/art/math]. Key teaching moment: [what this job actually does all day].
+### Plan B
+- [Fallback]
+### Materials
+- [Index cards, pencils…]
+
+## Friday — Community & Reflection
+standards: 1, 2, 4, 6
+### Academic Support & Literacy
+- Homework catch-up + [reading circle]
+### Structured Physical Activity
+- Community game: [WHOLE-GROUP FAVORITE]
+- Cool-down: [gratitude circle]
+### Enrichment
+Objective/Description: Weekly reflection — [what stuck this week?]. Students share [format: circle / exit ticket]. Key teaching moment: [students name what they want more of — feeds next week's plan].
+### Plan B
+- [Fallback]
+### Materials
+- [Exit tickets, markers…]
+`;
+
+function loadSample(){
+  document.getElementById("input").value = SAMPLE;
+  renderPlan();
+}
+
+/* ---------- exports ---------- */
+function downloadBlob(name, content, type){
+  const blob = new Blob([content], {type});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+
+function downloadRendered(){
+  const plan = renderPlan();
+  const body = document.getElementById("output").innerHTML;
+  const week = (plan && plan.meta.week_of ? plan.meta.week_of.replace(/[^\w-]/g,"_") : "week");
+  const css = document.querySelector("style").innerHTML;
+  const doc = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Plan — ${esc(week)}</title><style>${css}
+body{padding:24px;background:#fff}</style></head>
+<body><div id="output">${body}</div></body></html>`;
+  downloadBlob(`${week}_workplan.html`, doc, "text/html");
+}
+
+function downloadTool(){
+  // Sync the textarea's live value into the DOM so the copy carries the current plan.
+  const ta = document.getElementById("input");
+  ta.textContent = ta.value;
+  const doc = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  downloadBlob("render_work_plan.html", doc, "text/html");
+}
+</script>
+</body>
+</html>

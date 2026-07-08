@@ -1,6 +1,6 @@
 # Design: render_work_plan.py
 
-**Status:** blueprint approved-pending-Oliver (2026-07-08). Do not build until one weekly plan has been produced manually via `directives/weekly_work_plan.md` and Oliver confirms the delivery format his Program Manager actually accepts.
+**Status:** SUPERSEDED in practice (2026-07-08) — Oliver asked for a shareable, model-independent tool immediately, so the blueprint below was implemented client-side as **`execution/render_work_plan.html`**: a single-file, zero-dependency browser app (same input contract, same parse/validate/render logic, plus download/print/share). Browser-tested: 5 days render, standards checkboxes correct, downloaded copies work standalone. The Python variant stays unbuilt unless a server-side/batch need appears. The open questions below still need Oliver's answers to finalize the official delivery format.
 
 ## Job
 Deterministically convert an AI+Oliver-authored markdown work plan into the Center's official "Weekly Team Leader Work Plans" layout. Content decisions stay upstream (AI + Oliver); this script is formatting only — same input, same output, forever.
