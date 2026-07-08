@@ -3,7 +3,9 @@
 Background, expertise, and story. Facts marked **[verified]** come from Oliver's own documents; the rest awaits his input.
 
 ## Background
-- Progressed from intern-level to Team Leader at the Center's Expanded Learning program — recently enough that the "Intern → Team Lead" transition became the subject of his workshop and toolkit **[verified, inferred framing — confirm]**
+- Full name: **Oliver Quintana Bravo** **[verified]**
+- Journey at the Center (his own workshop slide): Intern (watching, learning, helping) → leading activities → Team Lead (own classroom & systems) → spoke at the **State Assembly** for the program → represented the Center at the **CA Dept. of Education** **[verified]**
+- His framing: "I didn't start as a confident Team Lead. I grew into it — one responsibility at a time." **[verified — his own words]**
 - [Education, credentials, career path before the Center]
 
 ## Expertise
